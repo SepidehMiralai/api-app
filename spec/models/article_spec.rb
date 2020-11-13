@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Article, type: :model do
-  describe "#validations"
+  describe "#validations" do
     it 'should test that the factory is valid ' do
       expect(build :article).to be_valid
     end
@@ -32,4 +32,15 @@ RSpec.describe Article, type: :model do
       expect(invalid_article).to be_valid
     end
   end
+
+  describe '.recent' do
+    it 'should list recent article first' do
+      old_article = create :article
+      new_article = create :article
+      expect(described_class.recent).to eq([new_article, old_article])
+      old_article.update_column :created_at, Time.now
+      expect(described_class.recent).to eq([old_article, new_article])
+    end
+  end
+
 end
